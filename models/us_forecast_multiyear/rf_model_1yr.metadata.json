@@ -1,0 +1,36 @@
+{
+  "year_gap": 1,
+  "model_type": "RandomForest",
+  "n_estimators": 200,
+  "train_samples": 55073,
+  "test_samples": 27523,
+  "features": [
+    "n_returns_t",
+    "total_wages_t",
+    "n_wages_t",
+    "total_interest_t",
+    "n_interest_t",
+    "total_cap_gains_t",
+    "n_cap_gains_t",
+    "total_business_t",
+    "n_business_t",
+    "avg_agi_t",
+    "pct_with_wages_t",
+    "avg_wage_per_earner_t",
+    "pct_with_business_t",
+    "pct_with_cap_gains_t",
+    "log_returns_t"
+  ],
+  "performance": {
+    "train": {
+      "r2": 0.9013866890340367,
+      "rmse": 26.38682561394682,
+      "mae": 4.674108448291985
+    },
+    "test": {
+      "r2": 0.7632121996180139,
+      "rmse": 34.94893146693055,
+      "mae": 9.199441285520425
+    }
+  }
+}

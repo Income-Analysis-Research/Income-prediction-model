@@ -1,0 +1,18 @@
+{
+  "model_type": "RF + XGBoost Ensemble",
+  "training_date": "2026-01-20T23:06:23.314305",
+  "n_features": 7,
+  "feature_names": [
+    "avg_wage",
+    "log_total_wages",
+    "total_wages",
+    "log_wage_returns",
+    "num_wage_returns",
+    "wage_per_return",
+    "state_avg_income"
+  ],
+  "train_r2": 0.9667610713938469,
+  "test_r2": 0.8045633758391157,
+  "test_rmse": 32.34407146847453,
+  "test_mae": 9.251061604116028
+}

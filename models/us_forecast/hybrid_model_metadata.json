@@ -1,0 +1,41 @@
+{
+  "model_type": "hybrid",
+  "algorithm": "stacking_ensemble",
+  "base_models": [
+    "stat_model",
+    "ml_model"
+  ],
+  "meta_learner": "Ridge",
+  "meta_learner_weights": {
+    "stat": -0.5585864604282044,
+    "ml": 1.6444185917134067
+  },
+  "features": [
+    "n_returns_t",
+    "total_wages_t",
+    "n_wages_t",
+    "total_interest_t",
+    "n_interest_t",
+    "total_cap_gains_t",
+    "n_cap_gains_t",
+    "total_business_t",
+    "n_business_t",
+    "avg_agi_t",
+    "pct_with_wages_t",
+    "avg_wage_per_earner_t",
+    "pct_with_business_t",
+    "pct_with_cap_gains_t",
+    "log_returns_t"
+  ],
+  "target": "target_income_tplus1",
+  "train_size": 8126,
+  "test_size": 4061,
+  "train_years": "2019\u21922021",
+  "test_year": "2021\u21922022",
+  "metrics": {
+    "r2": 0.686787007893763,
+    "rmse": 48.872646026745606,
+    "mae": 17.16021514454251,
+    "mape": 11.09484016354562
+  }
+}

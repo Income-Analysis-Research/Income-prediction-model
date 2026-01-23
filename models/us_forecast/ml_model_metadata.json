@@ -1,0 +1,109 @@
+{
+  "model_type": "machine_learning",
+  "algorithm": "RandomForest",
+  "features": [
+    "n_returns_t",
+    "total_wages_t",
+    "n_wages_t",
+    "total_interest_t",
+    "n_interest_t",
+    "total_cap_gains_t",
+    "n_cap_gains_t",
+    "total_business_t",
+    "n_business_t",
+    "avg_agi_t",
+    "pct_with_wages_t",
+    "avg_wage_per_earner_t",
+    "pct_with_business_t",
+    "pct_with_cap_gains_t",
+    "log_returns_t"
+  ],
+  "target": "target_income_tplus1",
+  "train_size": 8126,
+  "test_size": 4061,
+  "train_years": "2019\u21922021",
+  "test_year": "2021\u21922022",
+  "metrics": {
+    "r2": 0.728217880387632,
+    "rmse": 45.52567664715929,
+    "mae": 16.13992308080496,
+    "mape": 9.92619309590305
+  },
+  "all_metrics": {
+    "RandomForest": {
+      "r2": 0.728217880387632,
+      "rmse": 45.52567664715929,
+      "mae": 16.13992308080496,
+      "mape": 9.92619309590305
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "avg_agi_t",
+      "importance": 0.965762802519888
+    },
+    {
+      "feature": "pct_with_wages_t",
+      "importance": 0.009659698981400193
+    },
+    {
+      "feature": "pct_with_cap_gains_t",
+      "importance": 0.008227844149524193
+    },
+    {
+      "feature": "avg_wage_per_earner_t",
+      "importance": 0.003468237627431522
+    },
+    {
+      "feature": "pct_with_business_t",
+      "importance": 0.0032419777230832257
+    },
+    {
+      "feature": "total_interest_t",
+      "importance": 0.002098280423681161
+    },
+    {
+      "feature": "total_business_t",
+      "importance": 0.0014212186887849424
+    },
+    {
+      "feature": "total_cap_gains_t",
+      "importance": 0.0012152071206453288
+    },
+    {
+      "feature": "total_wages_t",
+      "importance": 0.001035863445664647
+    },
+    {
+      "feature": "n_cap_gains_t",
+      "importance": 0.0009697066219392546
+    },
+    {
+      "feature": "n_business_t",
+      "importance": 0.0008680151508079995
+    },
+    {
+      "feature": "n_interest_t",
+      "importance": 0.0007407214328114689
+    },
+    {
+      "feature": "n_wages_t",
+      "importance": 0.0005839250184918567
+    },
+    {
+      "feature": "log_returns_t",
+      "importance": 0.0004388286741681186
+    },
+    {
+      "feature": "n_returns_t",
+      "importance": 0.0002676724216779979
+    }
+  ],
+  "xgboost_available": false,
+  "model_params": {
+    "n_estimators": 200,
+    "max_depth": 10,
+    "min_samples_split": 10,
+    "min_samples_leaf": 4
+  }
+}

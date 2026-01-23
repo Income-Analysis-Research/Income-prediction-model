@@ -1,0 +1,7 @@
+avg_wage
+log_total_wages
+log_wage_returns
+wage_per_return
+num_wage_returns
+total_wages
+state_avg_income

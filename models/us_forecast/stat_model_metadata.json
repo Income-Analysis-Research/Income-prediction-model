@@ -1,0 +1,52 @@
+{
+  "model_type": "statistical",
+  "algorithm": "Ridge",
+  "features": [
+    "n_returns_t",
+    "total_wages_t",
+    "n_wages_t",
+    "total_interest_t",
+    "n_interest_t",
+    "total_cap_gains_t",
+    "n_cap_gains_t",
+    "total_business_t",
+    "n_business_t",
+    "avg_agi_t",
+    "pct_with_wages_t",
+    "avg_wage_per_earner_t",
+    "pct_with_business_t",
+    "pct_with_cap_gains_t",
+    "log_returns_t"
+  ],
+  "target": "target_income_tplus1",
+  "train_size": 8126,
+  "test_size": 4061,
+  "train_years": "2019\u21922021",
+  "test_year": "2021\u21922022",
+  "metrics": {
+    "r2": 0.5026627397179569,
+    "rmse": 61.58450677479344,
+    "mae": 19.85310737256186,
+    "mape": 12.578616724559142
+  },
+  "ridge_metrics": {
+    "r2": 0.5026627397179569,
+    "rmse": 61.58450677479344,
+    "mae": 19.85310737256186,
+    "mape": 12.578616724559142
+  },
+  "elasticnet_metrics": {
+    "r2": 0.49465068862107053,
+    "rmse": 62.07858481099972,
+    "mae": 19.691981398120518,
+    "mape": 12.275580964138417
+  },
+  "scaler": "StandardScaler",
+  "ridge_params": {
+    "alpha": 100.0
+  },
+  "elasticnet_params": {
+    "alpha": 0.1,
+    "l1_ratio": 0.9
+  }
+}

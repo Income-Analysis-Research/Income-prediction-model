@@ -1,0 +1,55 @@
+US INCOME PREDICTION MODEL - TRAINING RESULTS
+============================================================
+
+Training Date: 2026-01-20T22:24:36.100772
+Dataset: IRS SOI ZIP Code Data (2022)
+Target: Average AGI per Return (avg_agi)
+ZIP Codes: 27,589
+Features: 7
+Train/Test Split: 80/20 (seed=42)
+Best Model: XGBoost
+
+DATA LEAKAGE FIX APPLIED:
+  Excluded: agi_amount, num_returns
+  Reason: Target = agi_amount / num_returns (mathematical dependency)
+
+FEATURE LIST (NON-LEAKING):
+  1. avg_wage
+  2. log_total_wages
+  3. log_wage_returns
+  4. wage_per_return
+  5. num_wage_returns
+  6. total_wages
+  7. state_avg_income
+
+MODEL PERFORMANCE:
+============================================================
+
+Linear Regression:
+  5-Fold CV R²: 0.8340 ± 0.0359
+  Train R²: 0.8377
+  Test R²:  0.7685
+  Test RMSE: $35
+  Test MAE:  $11
+
+Random Forest:
+  5-Fold CV R²: 0.7922 ± 0.0897
+  Train R²: 0.9489
+  Test R²:  0.7712
+  Test RMSE: $35
+  Test MAE:  $10
+
+XGBoost:
+  5-Fold CV R²: 0.6170 ± 0.2595
+  Train R²: 0.9692
+  Test R²:  0.8214
+  Test RMSE: $31
+  Test MAE:  $9
+
+LightGBM:
+  5-Fold CV R²: 0.7820 ± 0.1051
+  Train R²: 0.8572
+  Test R²:  0.7707
+  Test RMSE: $35
+  Test MAE:  $9
+

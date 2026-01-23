@@ -1,0 +1,33 @@
+======================================================================
+US INCOME FORECASTING - MODEL COMPARISON
+======================================================================
+
+TEST SET PERFORMANCE (2021→2022)
+======================================================================
+
+       Model         Algorithm       R²      RMSE       MAE      MAPE
+  Stat Model             Ridge 0.502663 61.584507 19.853107 12.578617
+    Ml Model      RandomForest 0.728218 45.525677 16.139923  9.926193
+Hybrid Model stacking_ensemble 0.686787 48.872646 17.160215 11.094840
+
+======================================================================
+BEST MODEL
+======================================================================
+
+Model: Ml Model
+Algorithm: RandomForest
+R²: 0.7282
+RMSE: $46
+MAE: $16
+MAPE: 9.93%
+
+======================================================================
+TIME-BASED EVALUATION
+======================================================================
+
+Training: 2019→2020, 2020→2021 transitions (8,126 pairs)
+Testing:  2021→2022 transition (4,061 pairs)
+
+✅ No data leakage: Features from year t, target from t+1
+✅ Strict temporal split: Train on past, test on future
+✅ Real IRS data: Official ZIP-level tax statistics
