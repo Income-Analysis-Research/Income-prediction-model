@@ -71,6 +71,147 @@ The IRS publishes multiple variants of ZIP code data:
 
 Full schema documentation: https://www.irs.gov/pub/irs-soi/22zpdoc.doc
 
+---
+
+## Generated Datasets
+
+We transform the raw IRS data into several processed datasets for different modeling purposes:
+
+### 1. US Panel Dataset
+
+**File:** `datasets/us_panel_dataset.csv`  
+**Size:** 113.9 MB  
+**Records:** 110,430 ZIP-year observations  
+**Coverage:** 27,769 unique ZIPs across 50 states (2018-2022)  
+
+**Purpose:** Unified panel data structure with engineered features.
+
+**Generation:**
+```bash
+python src/data/build_us_panel_dataset.py
+```
+
+**Schema:**
+- `zip`: 5-digit ZIP code
+- `year`: Tax year (2018-2022)
+- `state`: 2-letter state code
+- `n_returns`: Number of tax returns
+- `total_wages`, `n_wages`: Wage income aggregates
+- `total_interest`, `n_interest`: Interest income
+- `total_cap_gains`, `n_cap_gains`: Capital gains
+- `total_business`, `n_business`: Business income
+- `avg_agi`: **Target variable** - Average adjusted gross income
+- `pct_with_wages`: Percentage with wage income
+- `avg_wage_per_earner`: Average wage per earner
+- `pct_with_business`: Percentage with business income
+- `pct_with_cap_gains`: Percentage with capital gains
+- `log_returns`: Log-transformed return count
+
+**Filtering:**
+- Removed ZIPs with <10 returns (privacy/reliability)
+- Removed records where ZIP=0 (data errors)
+- Kept all 50 states + DC
+
+**Feature Engineering:**
+- Computed percentages (e.g., % with wages)
+- Calculated per-capita metrics (e.g., avg wage per earner)
+- Log-transformed count variables
+
+---
+
+### 2. Multi-Year Forecasting Datasets
+
+These datasets contain temporal pairs for training horizon-specific models.
+
+#### 2a. 1-Year Forecasting Dataset
+
+**File:** `datasets/us_forecasting_1yr.csv`  
+**Size:** 16.5 MB  
+**Records:** 82,596 transition pairs  
+**Years:** 2019→2020, 2020→2021, 2021→2022  
+
+**Structure:** Each row contains:
+- 15 features from year `t` (suffix `_t`)
+- Target income from year `t+1`: `target_income_tplus1`
+
+**Train/Test Split:**
+- Train: 55,073 pairs (2019→2020, 2020→2021)
+- Test: 27,523 pairs (2021→2022)
+
+#### 2b. 2-Year Forecasting Dataset
+
+**File:** `datasets/us_forecasting_2yr.csv`  
+**Size:** 11.0 MB  
+**Records:** 55,027 transition pairs  
+**Years:** 2019→2021, 2020→2022  
+
+**Train/Test Split:**
+- Train: 27,509 pairs (2019→2021)
+- Test: 27,518 pairs (2020→2022)
+
+#### 2c. 3-Year Forecasting Dataset
+
+**File:** `datasets/us_forecasting_3yr.csv`  
+**Size:** 5.5 MB  
+**Records:** 27,487 transition pairs  
+**Years:** 2019→2022  
+
+**Train/Test Split:**
+- Train: 27,487 pairs (all data - no test set due to limited samples)
+- Test: 0 pairs
+
+**Generation:**
+```bash
+python src/data/build_us_multiyear_forecasting_dataset.py
+```
+
+**Feature Schema (15 features):**
+All features have `_t` suffix indicating base year:
+- `n_returns_t`: Number of returns
+- `total_wages_t`: Total wage income
+- `n_wages_t`: Count with wages
+- `total_interest_t`: Total interest income
+- `n_interest_t`: Count with interest
+- `total_cap_gains_t`: Total capital gains
+- `n_cap_gains_t`: Count with capital gains
+- `total_business_t`: Total business income
+- `n_business_t`: Count with business income
+- `avg_agi_t`: **Most important** - Average AGI at base year
+- `pct_with_wages_t`: Percentage with wages
+- `avg_wage_per_earner_t`: Average wage per earner
+- `pct_with_business_t`: Percentage with business
+- `pct_with_cap_gains_t`: Percentage with capital gains
+- `log_returns_t`: Log of return count
+
+**Target Variable:**
+- `target_income_tplusn`: Average AGI at year `t+n` (in thousands)
+
+---
+
+### 3. Parquet Optimized Files
+
+**Directory:** `datasets/parquet/`  
+**Format:** Apache Parquet (columnar storage)  
+**Size:** ~60% smaller than CSV  
+**Load Speed:** 10-100x faster than CSV  
+
+**Files:**
+- `09zpallagi.parquet` through `22zpallagi.parquet`
+- Raw IRS data in optimized format
+
+**Conversion:**
+```bash
+python scripts/convert_to_parquet.py
+```
+
+**Usage:**
+```python
+import pandas as pd
+df = pd.read_parquet('datasets/parquet/22zpallagi.parquet')
+```
+
+---
+
 ### Data Quality Notes
 
 **Strengths:**

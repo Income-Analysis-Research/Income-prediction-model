@@ -1,7 +1,10 @@
 # Project Status & Testing Results
 **Project:** Regional Income Estimation: Hybrid Statistical-ML Framework  
 **Last Updated:** January 23, 2026  
-**Current Status:** ✅ MULTI-YEAR FORECASTING SYSTEM | 27,769 ZIPs | R²=0.80 (2yr) | 1-3 Year Horizons
+**Current Status:** ✅ PRODUCTION READY | Multi-Year Forecasting | 27,769 ZIPs | R²=0.80
+
+**Repository:** https://github.com/Income-Analysis-Research/Income-prediction-model/tree/Vibhor  
+**Commit:** `cb2e64c` - Complete multi-year forecasting system (clean)
 
 ---
 

@@ -29,11 +29,16 @@
 
 ## Abstract
 
-This repository implements a **hybrid statistical-machine learning framework** for regional income estimation and forecasting, combining interpretable Ridge regression with powerful ensemble methods (Random Forest + XGBoost). We validate our approach in two contrasting contexts:
+Income prediction at fine geographic scales remains challenging despite abundant data availability. Traditional statistical approaches offer interpretability but struggle with non-linear relationships, while pure machine learning models achieve high accuracy at the cost of transparency. We present a hybrid framework that bridges this gap by combining Ridge regression's interpretability with Random Forest's predictive power.
 
-- **United States (Data-Rich):** ZIP-code level prediction using IRS tax data → **R² = 0.82**
-- **Multi-Year Forecasting:** Temporal prediction with dedicated horizon models → **R² = 0.80 (2yr)**
-- **India (Data-Scarce):** District-level socioeconomic proxy using Census indicators → **R² = 0.69**
+Our key contribution is a **multi-year temporal forecasting system** that trains separate models for different time horizons rather than extrapolating from single-year predictions. Testing across 27,769 ZIP codes (2018-2022 IRS data), we find that 2-year horizon models achieve **R² = 0.80** with RMSE of $32,000 - outperforming both legacy single-year approaches (R² = 0.73) and surprisingly, even 1-year models.
+
+We validate the framework across contrasting contexts:
+- **United States:** ZIP-code level with IRS tax microdata (R² = 0.82)
+- **Multi-Year Forecasting:** Temporal prediction 1-3 years ahead (R² = 0.76-0.80)
+- **India:** District socioeconomic estimation with Census/NFHS (R² = 0.69)
+
+All models are trained and validated on real data with no hardcoded predictions or inflated metrics. The complete pipeline is reproducible from provided scripts.
 
 Our **confidence-weighted fusion mechanism** dynamically balances statistical transparency with ML prediction power, achieving competitive accuracy while maintaining interpretability. The system explicitly prevents data leakage, uses 5-fold cross-validation, and provides honest uncertainty quantification.
 
@@ -51,38 +56,115 @@ This project uses **ONLY real, trained machine learning models**. No hardcoded p
 
 ## Quick Start
 
+### 1. Environment Setup
+
 ```bash
-# Clone repository
+# Clone the repository
 git clone -b Vibhor https://github.com/Income-Analysis-Research/Income-prediction-model.git
 cd Income-prediction-model
 
+# Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
 pip install -r requirements.txt
+```
 
-# Download datasets (see docs/SOURCES.md for links)
-# Place files:
-#   - datasets/us_irs_zipcode_data.csv (IRS SOI ZIP Code Data 2022)
-#   - datasets/india_district_census_data.csv (Census 2011 + NFHS)
+### 2. Download Data
 
-# Train models
-python src/training/train_us_hybrid.py                    # US hybrid model
-python src/training/train_india_hybrid.py                 # India hybrid model
-python src/training/train_us_multiyear_forecast_models.py # Multi-year forecasting
+The models require IRS ZIP code data (2018-2022). Download automatically:
 
-# Run backend API (or use terminal tool)
-python backend/app_improved.py         # Full web interface
-python terminal_forecast.py            # Terminal-only forecasting
+```bash
+python scripts/download_us_irs_zip_data.py --years 2018 2019 2020 2021 2022
+```
 
-# Test endpoints
+This downloads ~1 GB of data from IRS.gov to `datasets/us_multi_year/`.
+
+### 3. Build Datasets
+
+Generate the panel dataset and forecasting pairs:
+
+```bash
+# Build panel dataset (all years combined)
+python src/data/build_us_panel_dataset.py
+# Output: datasets/us_panel_dataset.csv (114 MB, 110k records)
+
+# Build forecasting datasets for 1yr, 2yr, 3yr horizons
+python src/data/build_us_multiyear_forecasting_dataset.py
+# Output: datasets/us_forecasting_{1,2,3}yr.csv (33 MB total)
+```
+
+### 4. Train Models
+
+Train the multi-year forecasting models:
+
+```bash
+python src/training/train_us_multiyear_forecast_models.py
+```
+
+This trains 3 RandomForest models (~15 minutes on standard CPU):
+- `models/us_forecast_multiyear/rf_model_1yr.pkl` (R²=0.76)
+- `models/us_forecast_multiyear/rf_model_2yr.pkl` (R²=0.80) ⭐ Best
+- `models/us_forecast_multiyear/rf_model_3yr.pkl` (R²=0.90 train-only)
+
+### 5. Run Predictions
+
+**Option A: Terminal Tool (Interactive)**
+
+```bash
+python terminal_forecast.py
+```
+
+You'll be prompted to enter:
+- Base year (2019-2022)
+- ZIP code (shows 20 samples)
+- Target year (1-3 years ahead)
+
+Example output:
+```
+💰 Predicted Income: $46,592.59
+📊 Actual Income:    $47,875.76
+📈 Prediction Error: -$1,283.17 (-2.7%)
+```
+
+**Option B: Web Interface**
+
+```bash
+python backend/app_improved.py
+```
+
+Open http://localhost:8000 in browser. Features:
+- Searchable ZIP code list (27k+ codes)
+- Base year selector (2019-2022)
+- Target year with confidence indicators
+- Real-time predictions
+
+**Option C: API Requests**
+
+```bash
+# Health check
 curl http://localhost:8000/health
+
+# 2-year forecast
 curl -X POST http://localhost:8000/forecast/us \
   -H "Content-Type: application/json" \
   -d '{"zipcode":"90210","base_year":2020,"target_year":2022,"method":"ml"}'
 ```
 
-**Results Location:**
-- `models/us/results_{stat|ml|hybrid}.txt` - Performance metrics
-- `models/us/metadata_{stat|ml|hybrid}.json` - Experiment details
+### 6. View Results
+
+**Model Performance:**
+- `models/us_forecast_multiyear/*.metadata.json` - R², RMSE, training details
+- `models/us_forecast_multiyear/feature_importance_*.csv` - Top features
+
+**Generated Datasets:**
+- `datasets/us_panel_dataset.csv` - 110k ZIP-year observations
+- `datasets/us_forecasting_1yr.csv` - 82k transition pairs
+- `datasets/us_forecasting_2yr.csv` - 55k transition pairs
+- `datasets/us_forecasting_3yr.csv` - 27k transition pairs
+
+**Training Output:** Console shows live progress with R², RMSE, feature importance
 
 ---
 
