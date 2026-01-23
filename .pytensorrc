@@ -1,0 +1,13 @@
+[global]
+device = cpu
+floatX = float32
+optimizer = fast_run
+exception_verbosity = high
+cxx = C:/Users/versu/Miniconda3/Library/mingw-w64/bin/g++.exe
+openmp = False
+
+[blas]
+ldflags = 
+
+[gcc]
+cxxflags = -IC:/Users/versu/Miniconda3/Library/include

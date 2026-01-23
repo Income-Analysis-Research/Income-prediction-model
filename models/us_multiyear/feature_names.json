@@ -1,0 +1,14 @@
+[
+  "pct_low_income",
+  "pct_mid_income",
+  "pct_high_income",
+  "pct_with_wages",
+  "pct_with_business",
+  "pct_with_cap_gains",
+  "pct_with_pension",
+  "avg_wage_per_earner",
+  "avg_business_income",
+  "log_returns",
+  "year_normalized",
+  "income_trend"
+]

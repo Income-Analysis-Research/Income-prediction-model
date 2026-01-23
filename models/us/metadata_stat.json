@@ -1,0 +1,23 @@
+{
+  "model_type": "Ridge Regression",
+  "training_date": "2026-01-20T23:06:10.587613",
+  "n_features": 7,
+  "feature_names": [
+    "avg_wage",
+    "log_total_wages",
+    "log_wage_returns",
+    "num_wage_returns",
+    "wage_per_return",
+    "total_wages",
+    "state_avg_income"
+  ],
+  "n_train": 22071,
+  "n_test": 5518,
+  "cv_r2_mean": 0.8341160084906308,
+  "cv_r2_std": 0.03617934021306345,
+  "train_r2": 0.8377344469550639,
+  "test_r2": 0.7683377542298248,
+  "test_rmse": 35.21432295372904,
+  "test_mae": 10.51675596807242,
+  "alpha": 1.0
+}

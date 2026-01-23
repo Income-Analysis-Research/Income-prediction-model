@@ -1,0 +1,8 @@
+literacy_rate
+worker_participation
+urban_ratio
+avg_household_size
+asset_score
+electricity_access
+water_access
+sanitation_access

@@ -1,0 +1,102 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Models (large files - do NOT commit to git)
+models/**/*.pkl
+models/**/*.joblib
+models/**/*.h5
+models/**/*.pt
+models/**/*.pth
+
+# But keep the directory structure
+!models/us/.gitkeep
+!models/india/.gitkeep
+
+# Datasets folder (centralized - do NOT commit)
+datasets/**/*.csv
+datasets/**/*.xlsx
+datasets/**/*.json
+datasets/**/*.parquet
+datasets/**/*.zip
+datasets/**/*.gz
+datasets/*.csv
+datasets/*.xlsx
+
+# Keep README in datasets folder
+!datasets/README.md
+
+# Processed data (can be regenerated)
+data_processed/**/*.csv
+data_processed/**/*.parquet
+
+# Raw data (legacy - do NOT commit - download separately)
+data_raw/**/*.csv
+data_raw/**/*.xlsx
+data_raw/**/*.json
+data_raw/**/*.parquet
+data_raw/**/*.zip
+data_raw/**/*.gz
+
+# Keep .gitkeep files
+!**/.gitkeep
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/

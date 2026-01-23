@@ -1,0 +1,78 @@
+{
+  "model_name": "XGBoost",
+  "training_date": "2026-01-20T22:24:36.100772",
+  "dataset_year": 2022,
+  "data_source": "IRS Statistics of Income (SOI) - ZIP Code Data",
+  "target_variable": "avg_agi",
+  "n_features": 7,
+  "feature_names": [
+    "avg_wage",
+    "log_total_wages",
+    "log_wage_returns",
+    "wage_per_return",
+    "num_wage_returns",
+    "total_wages",
+    "state_avg_income"
+  ],
+  "n_train_samples": 22071,
+  "n_test_samples": 5518,
+  "n_zip_codes": 27589,
+  "split_seed": 42,
+  "results": {
+    "Linear Regression": {
+      "model_name": "Linear Regression",
+      "train_r2": 0.8377365920860365,
+      "train_rmse": 28.760304322098772,
+      "train_mae": 10.466155118896388,
+      "test_r2": 0.768476100365413,
+      "test_rmse": 35.20380658098083,
+      "test_mae": 10.522403198139257,
+      "cv_r2_mean": 0.8340045034771162,
+      "cv_r2_std": 0.03594562735701058
+    },
+    "Random Forest": {
+      "model_name": "Random Forest",
+      "train_r2": 0.9489382131037584,
+      "train_rmse": 16.13359627672858,
+      "train_mae": 6.004034084076207,
+      "test_r2": 0.7712460725643699,
+      "test_rmse": 34.99258219161953,
+      "test_mae": 9.635184629143573,
+      "cv_r2_mean": 0.7922267902238336,
+      "cv_r2_std": 0.08968359543867073
+    },
+    "XGBoost": {
+      "model_name": "XGBoost",
+      "train_r2": 0.9691676861351509,
+      "train_rmse": 12.536786785773124,
+      "train_mae": 7.001672020112434,
+      "test_r2": 0.8213774449422937,
+      "test_rmse": 30.921450666112985,
+      "test_mae": 9.165854817035207,
+      "cv_r2_mean": 0.6170231873667419,
+      "cv_r2_std": 0.25954362083137145
+    },
+    "LightGBM": {
+      "model_name": "LightGBM",
+      "train_r2": 0.8572219017338374,
+      "train_rmse": 26.978262571176664,
+      "train_mae": 8.300057739854678,
+      "test_r2": 0.7707264295303764,
+      "test_rmse": 35.03230464990964,
+      "test_mae": 9.276823696755892,
+      "cv_r2_mean": 0.7819951099583926,
+      "cv_r2_std": 0.10510557663602141
+    }
+  },
+  "best_test_r2": 0.8213774449422937,
+  "best_test_rmse": 30.921450666112985,
+  "best_test_mae": 9.165854817035207,
+  "best_cv_r2_mean": 0.6170231873667419,
+  "best_cv_r2_std": 0.25954362083137145,
+  "data_leakage_fixed": true,
+  "excluded_features": [
+    "agi_amount",
+    "num_returns"
+  ],
+  "exclusion_reason": "Mathematical leakage - target is agi_amount/num_returns"
+}

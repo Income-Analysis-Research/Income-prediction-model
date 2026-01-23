@@ -1,0 +1,1 @@
+US HYBRID MODEL\nTest R²: 0.7738\nRMSE: $0.0k\nWeights: Stat=0.10, ML=0.90\n

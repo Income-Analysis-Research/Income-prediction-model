@@ -1,0 +1,42 @@
+INDIA INCOME PROXY MODEL - TRAINING RESULTS
+============================================================
+
+Training Date: 2026-01-20T23:06:54.097714
+Dataset: Census of India 2011
+Target: Income Proxy Index (0-100 socioeconomic score)
+Districts: 631
+Features: 8
+Train/Test Split: 80/20 (stratified, seed=42)
+
+WARNING: Proxy-based socioeconomic index, NOT currency prediction
+Categories are derived from the index using threshold cuts.
+
+FEATURE LIST:
+  1. literacy_rate
+  2. worker_participation
+  3. urban_ratio
+  4. avg_household_size
+  5. asset_score
+  6. electricity_access
+  7. water_access
+  8. sanitation_access
+
+REGRESSION PERFORMANCE (Index Prediction):
+  Train R²: 0.9643
+  Test R²: 0.6893
+  Test RMSE: 0.43
+  Test MAE: 0.05
+
+CLASSIFICATION PERFORMANCE (Category Prediction):
+  Train Accuracy: 1.0000
+  Test Accuracy: 1.0000
+  Precision (macro): 1.0000
+  Recall (macro): 1.0000
+  F1 (macro): 1.0000
+
+  Confusion Matrix:
+  [127]
+
+  CAVEAT: Perfect accuracy may indicate label simplicity.
+  Categories are threshold-based on the predicted index.
+  Further validation with independent income data recommended.

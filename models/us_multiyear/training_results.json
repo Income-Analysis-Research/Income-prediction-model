@@ -1,0 +1,78 @@
+{
+  "ridge": {
+    "train_r2": 0.8145706822390979,
+    "test_r2": 0.7876017102135889,
+    "cv_r2_mean": 0.8163424406367238,
+    "cv_r2_std": 0.0330070200349472,
+    "rmse": 26.843614027055658,
+    "mae": 7.70574600284008
+  },
+  "rf": {
+    "train_r2": 0.8816325502989918,
+    "test_r2": 0.847335718908053,
+    "rmse": 22.758005411665195,
+    "mae": 4.313932242632259,
+    "feature_importance": [
+      {
+        "feature": "avg_wage_per_earner",
+        "importance": 0.33940419530940613
+      },
+      {
+        "feature": "pct_with_cap_gains",
+        "importance": 0.1879773608667944
+      },
+      {
+        "feature": "avg_business_income",
+        "importance": 0.16015224218867216
+      },
+      {
+        "feature": "pct_high_income",
+        "importance": 0.1352282825521992
+      },
+      {
+        "feature": "pct_low_income",
+        "importance": 0.09387758898831662
+      },
+      {
+        "feature": "pct_mid_income",
+        "importance": 0.024384036458155012
+      },
+      {
+        "feature": "pct_with_wages",
+        "importance": 0.021445078670987563
+      },
+      {
+        "feature": "log_returns",
+        "importance": 0.010214786823778826
+      },
+      {
+        "feature": "pct_with_pension",
+        "importance": 0.010025132123803931
+      },
+      {
+        "feature": "pct_with_business",
+        "importance": 0.009941326299998065
+      },
+      {
+        "feature": "year_normalized",
+        "importance": 0.005093259857946755
+      },
+      {
+        "feature": "income_trend",
+        "importance": 0.002256709859941508
+      }
+    ]
+  },
+  "xgboost": {
+    "train_r2": 0.9645417794064844,
+    "test_r2": 0.9149997502357741,
+    "rmse": 16.98148159753883,
+    "mae": 4.329214892405749
+  },
+  "gradient_boosting": {
+    "train_r2": 0.9389628538532879,
+    "test_r2": 0.8990220817282836,
+    "rmse": 18.508817979503792,
+    "mae": 4.5295394354194976
+  }
+}

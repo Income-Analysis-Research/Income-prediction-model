@@ -1,0 +1,41 @@
+{
+  "model_type": "Dual (Regression + Classification)",
+  "training_date": "2026-01-20T23:06:54.097714",
+  "dataset_year": 2011,
+  "data_source": "Census of India 2011",
+  "target_variable": "income_proxy_index (0-100)",
+  "n_features": 8,
+  "feature_names": [
+    "literacy_rate",
+    "worker_participation",
+    "urban_ratio",
+    "avg_household_size",
+    "asset_score",
+    "electricity_access",
+    "water_access",
+    "sanitation_access"
+  ],
+  "n_train_samples": 504,
+  "n_test_samples": 127,
+  "n_districts": 631,
+  "split_seed": 42,
+  "stratified_split": true,
+  "regression_metrics": {
+    "train_r2": 0.9642530336733652,
+    "test_r2": 0.6893485210659815,
+    "test_rmse": 0.4334031826881411,
+    "test_mae": 0.04532232372092426
+  },
+  "classification_metrics": {
+    "train_accuracy": 1.0,
+    "test_accuracy": 1.0,
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "confusion_matrix": [
+      [
+        127
+      ]
+    ]
+  }
+}
