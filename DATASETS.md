@@ -1,79 +1,93 @@
 # Datasets Documentation
 
-## US Multi-Year ZIP Code Income Data
-
-### Official Source: IRS Statistics of Income (SOI)
-
-**Primary Source:**
-- **Website:** https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi
-- **Agency:** Internal Revenue Service, Statistics of Income Division
-- **Update Frequency:** Annual (typically 18-24 months lag)
-
-### Available Years
-
-| Year | Dataset Name | Official Link | Status |
-|------|--------------|---------------|--------|
-| 2022 | Individual Income Tax Statistics - 2022 ZIP Code Data | https://www.irs.gov/pub/irs-soi/22zpallagi.csv | ✅ Available |
-| 2021 | Individual Income Tax Statistics - 2021 ZIP Code Data | https://www.irs.gov/pub/irs-soi/21zpallagi.csv | ✅ Available |
-| 2020 | Individual Income Tax Statistics - 2020 ZIP Code Data | https://www.irs.gov/pub/irs-soi/20zpallagi.csv | ✅ Available |
-| 2019 | Individual Income Tax Statistics - 2019 ZIP Code Data | https://www.irs.gov/pub/irs-soi/19zpallagi.csv | ✅ Available |
-| 2018 | Individual Income Tax Statistics - 2018 ZIP Code Data | https://www.irs.gov/pub/irs-soi/18zpallagi.csv | ✅ Available |
-
-### File Format
-
-- **Format:** CSV (comma-separated values)
-- **Encoding:** UTF-8
-- **Size:** ~200-250 MB per year (uncompressed)
-- **Records:** ~165,000 rows per year (ZIP-level aggregates)
-
-### Dataset Variants
-
-The IRS publishes multiple variants of ZIP code data:
-
-1. **`YYzpallagi.csv`** ✅ **CHOSEN**
-   - All AGI ranges combined
-   - Most comprehensive
-   - Used for this project
-
-2. `YYzpallnoagi.csv`
-   - No AGI (Adjusted Gross Income) field
-   - Smaller file size
-   - Not suitable for income prediction
-
-3. State-specific files
-   - Separate files per state
-   - More granular but requires aggregation
-   - Not used (we use national file)
-
-### Why `zpallagi.csv` Was Chosen
-
-✅ **Comprehensive:** Includes all income brackets and tax statistics
-✅ **Consistent:** Same schema across years (2018-2022)
-✅ **ZIP-level:** Natural geographic unit for analysis
-✅ **Rich features:** 150+ columns including wages, business income, capital gains, deductions
-✅ **Target variable:** Contains AGI (Adjusted Gross Income) for prediction
-
-### Column Schema (Key Fields)
-
-| Column | Description | Type | Use |
-|--------|-------------|------|-----|
-| `zipcode` | 5-digit ZIP code | string | Primary key |
-| `agi_stub` | AGI range (1-6) | int | Aggregation level |
-| `N1` | Number of returns | int | Sample size |
-| `A00100` | Adjusted Gross Income | float | Target (income) |
-| `N00200` | Number with salaries/wages | int | Feature |
-| `A00200` | Total salaries and wages | float | Feature |
-| `N00300` | Number with taxable interest | int | Feature |
-| `A00300` | Taxable interest amount | float | Feature |
-| `N00650` | Number with capital gains | int | Feature |
-| `A00650` | Capital gain/loss amount | float | Feature |
-| ... | 150+ additional columns | ... | Features |
-
-Full schema documentation: https://www.irs.gov/pub/irs-soi/22zpdoc.doc
+**Complete data source documentation and download instructions**
 
 ---
 
-## Generated Datasets
+## Table of Contents
+- [Data Sources & Citations](#data-sources--citations)
+- [Download Instructions](#download-instructions)
+- [Generated Datasets](#generated-datasets)
+- [Data Quality Notes](#data-quality-notes)
+
+---
+
+## Data Sources & Citations
+
+### 1. US Income Data (Primary Dataset)
+
+**Official Source:** IRS Statistics of Income (SOI) - Individual Income Tax Statistics
+
+**Publisher:** Internal Revenue Service, United States Department of the Treasury  
+**License:** Public domain (U.S. Government works, 17 U.S.C. § 105)  
+**Website:** https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi
+
+**Dataset Details:**
+- **Format:** CSV (comma-separated values)
+- **Size:** ~200-250 MB per year (uncompressed)
+- **Records:** ~165,000 ZIP-level aggregates per year
+- **Coverage:** All 50 US states + DC
+- **Update Frequency:** Annual (18-24 months lag)
+
+**Available Years:**
+
+| Year | Dataset | Direct Download | Status |
+|------|---------|----------------|--------|
+| 2022 | 22zpallagi.csv | https://www.irs.gov/pub/irs-soi/22zpallagi.csv | ✅ Used |
+| 2021 | 21zpallagi.csv | https://www.irs.gov/pub/irs-soi/21zpallagi.csv | ✅ Used |
+| 2020 | 20zpallagi.csv | https://www.irs.gov/pub/irs-soi/20zpallagi.csv | ✅ Used |
+| 2019 | 19zpallagi.csv | https://www.irs.gov/pub/irs-soi/19zpallagi.csv | ✅ Used |
+| 2018 | 18zpallagi.csv | https://www.irs.gov/pub/irs-soi/18zpallagi.csv | ✅ Used |
+
+**What We Used:**
+- **Target Variable:** Adjusted Gross Income (AGI) - average income per ZIP code
+- **Features:** 150+ columns including wages, business income, capital gains, interest, deductions
+- **Geographic Granularity:** 5-digit ZIP code level
+- **Sample Size:** 27,769 unique ZIP codes, 110,430 ZIP-year observations (2018-2022)
+
+**Why This Dataset:**
+- ✅ Official government data (highly reliable)
+- ✅ Comprehensive tax statistics
+- ✅ Consistent methodology across years
+- ✅ Fine geographic granularity
+- ✅ Large sample size (entire tax-filing population)
+
+**Citation:**
+> Internal Revenue Service. (2024). *SOI Tax Stats - Individual Income Tax Statistics - ZIP Code Data (Tax Years 2018-2022)*. United States Department of the Treasury. Retrieved from https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi
+
+**Schema Documentation:** https://www.irs.gov/pub/irs-soi/22zpdoc.doc
+
+---
+
+### 2. India District Census Data (Secondary Dataset)
+
+**Official Source:** Census of India 2011
+
+**Publisher:** Office of the Registrar General & Census Commissioner, India  
+**Ministry:** Ministry of Home Affairs, Government of India  
+**License:** Government of India Open Data License  
+**Original Website:** https://censusindia.gov.in/
+
+**Kaggle Mirror:** https://www.kaggle.com/datasets/sudalairajkumar/india-census-2011 (CC0 Public Domain)
+
+**Dataset Details:**
+- **Format:** CSV
+- **Size:** ~2 MB
+- **Records:** 640 districts
+- **Coverage:** 19 major states (95% population)
+
+**What We Used:**
+- **Proxy Target:** Socioeconomic status indicators (no direct income data available)
+- **Features:** Literacy rate, worker participation, urban ratio, household size, infrastructure access, asset ownership
+- **Processing:** Created composite scores from census variables
+- **Final Dataset:** 631 valid districts × 10 features
+
+**Citation:**
+> Office of the Registrar General & Census Commissioner, India. (2011). *Census of India 2011: District-level Data*. Ministry of Home Affairs, Government of India. Retrieved from https://censusindia.gov.in/
+
+---
+
+## Download Instructions
 
 We transform the raw IRS data into several processed datasets for different modeling purposes:
 
