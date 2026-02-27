@@ -1,0 +1,40 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+
+# Parquet (redundant with CSV, excluded per project spec)
+*.parquet
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Distribution / build
+dist/
+build/
+*.egg-info/
+
+# PyTensor compiled cache
+pytensor_cache/
