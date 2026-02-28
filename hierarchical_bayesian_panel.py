@@ -137,13 +137,97 @@ print(f"  After cleaning : {df.shape[0]:,} rows")
 # Log-transform response (Stukalenko: lognormal income distribution)
 df["log_income"] = np.log1p(df["AVG_INCOME"])
 
+# ────────────────────────────────────────────────────────────────────────────
+# 2b.  NEW ECONOMIC FEATURES
+#      These three features extend the composition-share predictors with
+#      structural dynamics that differentiate regional income resilience.
+# ────────────────────────────────────────────────────────────────────────────
+print("\n  [2b/7] Engineering new economic features ...")
+
+# ── 1. Income Composition Stability Index (ICS) ─────────────────────────────
+#   ICS_{z,t}  =  Σ_k | share_{k,z,t} − share_{k,z,t−1} |
+#   Measures year-over-year volatility in income structure per ZIP.
+#   High ICS → rapidly shifting income mix (e.g., boom/bust capital gains).
+#   Low  ICS → stable, predictable income base (wage-dominant ZIPs).
+#   Economic interpretation: ZIP structural stability (Stukalenko 2005 §3)
+_ics_order   = df.sort_values(["ZIPCODE", "YEAR"])
+_share_feat_list = [f"share_{n}" for n in SHARE_NAMES]   # original 7 share cols
+_ics_diffs = (
+    _ics_order.groupby("ZIPCODE")[_share_feat_list]
+    .diff()          # NaN for the first year of each ZIP (no prior year)
+    .abs()
+    .sum(axis=1)
+)
+df["income_stability_index"] = _ics_diffs
+# First observation per ZIP has no prior year → fill with dataset median
+_ics_med = df["income_stability_index"].median()
+df["income_stability_index"] = df["income_stability_index"].fillna(_ics_med)
+df["income_stability_index"] = df["income_stability_index"].clip(0.0, 2.0)
+print(f"    income_stability_index   mean={df['income_stability_index'].mean():.4f}  "
+      f"std={df['income_stability_index'].std():.4f}  "
+      f"[0=perfectly stable, 2=high volatility]")
+
+# ── 2. Income Diversity Index (Shannon Entropy) ──────────────────────────────
+#   H_{z,t} = − Σ_k  p_k · log(p_k)    p_k = share_k / Σ shares
+#   Measures diversification of income sources at the ZIP level.
+#   High H → balanced economy (wages + capital + business + SS + …)
+#   Low  H → concentration in one source (dependency risk)
+#   Max possible with 7 sources: log(7) ≈ 1.946
+_div_vals = df[_share_feat_list].values.clip(1e-10, None)
+_div_sums = _div_vals.sum(axis=1, keepdims=True)
+_div_sums[_div_sums < 1e-10] = 1.0      # guard against all-zero rows
+_p        = _div_vals / _div_sums        # row-normalised to probability simplex
+_entropy  = -(_p * np.log(_p + 1e-10)).sum(axis=1)
+df["income_diversity_index"] = _entropy
+df["income_diversity_index"] = df["income_diversity_index"].clip(0.0, np.log(7) + 0.05)
+print(f"    income_diversity_index   mean={df['income_diversity_index'].mean():.4f}  "
+      f"std={df['income_diversity_index'].std():.4f}  "
+      f"[max=log(7)={np.log(7):.3f}; high=diversified]")
+
+# ── 3. Shock Response Index (COVID-19: 2020 vs 2019) ─────────────────────────
+#   shock_{z} = ( AVG_INCOME_{z,2020} − AVG_INCOME_{z,2019} )
+#                / ( AVG_INCOME_{z,2019} + 1 )
+#   Captures structural resilience/vulnerability to macro shocks.
+#   Positive → income rose during COVID (wealth-heavy / capital-gains ZIPs).
+#   Negative → income fell (hospitality, service, trade-exposed ZIPs).
+#   Applied as a time-invariant ZIP-level property (computed once, same value
+#   across all years for a ZIP — encodes structural economic type).
+_inc_2019 = (df[df["YEAR"] == 2019]
+               .set_index("ZIPCODE")["AVG_INCOME"]
+               .rename("inc_2019"))
+_inc_2020 = (df[df["YEAR"] == 2020]
+               .set_index("ZIPCODE")["AVG_INCOME"]
+               .rename("inc_2020"))
+_shock_zip = (_inc_2020 - _inc_2019) / (_inc_2019 + 1.0)   # normalised ratio
+df["shock_response_index"] = df["ZIPCODE"].map(_shock_zip)
+_shock_med = df["shock_response_index"].median()
+df["shock_response_index"] = df["shock_response_index"].fillna(_shock_med)
+df["shock_response_index"] = df["shock_response_index"].clip(-1.0, 1.0)
+print(f"    shock_response_index     mean={df['shock_response_index'].mean():.4f}  "
+      f"std={df['shock_response_index'].std():.4f}  "
+      f"[−1=hardest hit, +1=largest COVID income gain]")
+
+# Extend FEATURE_NAMES to include the three new features.
+# All downstream code (X matrix, PyMC coords, beta_df) picks these up automatically.
+_NEW_FEATURE_NAMES = [
+    "income_stability_index",
+    "income_diversity_index",
+    "shock_response_index",
+]
+FEATURE_NAMES = FEATURE_NAMES + _NEW_FEATURE_NAMES   # 7 → 10 features
+
+# Drop rows where any new feature is still NaN (safety guard)
+df.dropna(subset=_NEW_FEATURE_NAMES, inplace=True)
+df.reset_index(drop=True, inplace=True)
+print(f"    Rows after new-feature NaN drop : {df.shape[0]:,}")
+
 # Quick correlation report
-print("\n  Income share -> log(income) correlations:")
+print("\n  Income share/feature -> log(income) correlations:")
 for feat in FEATURE_NAMES:
     r = df[feat].corr(df["log_income"])
     bar = "#" * int(abs(r) * 25)
     sign = "+" if r >= 0 else "-"
-    print(f"    {feat:30s}  r = {sign}{abs(r):.4f}  {bar}")
+    print(f"    {feat:35s}  r = {sign}{abs(r):.4f}  {bar}")
 
 # ────────────────────────────────────────────────────────────────────────────
 # 3.  Subsample: balanced across states, full-panel ZIPs only
@@ -406,7 +490,9 @@ fig, ax = plt.subplots(figsize=(9, 5))
 means  = beta_df["mean"].values
 lo     = beta_df["hdi_3%"].values
 hi     = beta_df["hdi_97%"].values
-labels = [f.replace("share_", "") for f in FEATURE_NAMES]
+# Clean display labels: strip "share_" prefix; new features already have clean names
+labels = [f.replace("share_", "").replace("_index", "\n_idx").replace("_", " ")
+          for f in FEATURE_NAMES]
 colors = ["#d62728" if m < 0 else "#2ca02c" for m in means]
 y_pos  = np.arange(len(labels))
 
@@ -418,9 +504,9 @@ ax.set_yticklabels(labels, fontsize=11)
 ax.axvline(0, color="black", linewidth=0.8, linestyle="--")
 ax.set_xlabel("Posterior Mean beta  (standardised)", fontsize=11)
 ax.set_title(
-    "Beta Coefficients: Income Composition Shares\n"
+    "Beta Coefficients: Income Composition Shares + Structural Features\n"
     "green = positive effect on income  |  red = negative  |  94% HDI bars\n"
-    "[Capital gains & dividends dominate; wages share is negative]",
+    "[ICS=stability  DIV=diversity  SHOCK=COVID resilience index]",
     fontsize=9)
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "beta_forest.png"), dpi=150, bbox_inches="tight")
@@ -521,11 +607,17 @@ DONE  —  results saved to ./results/
 {BANNER}
 
   summary_global.csv         - alpha, sigma_state, sigma_year, sigma_obs
-  beta_coefficients.csv      - beta for each income share
+  beta_coefficients.csv      - beta for each feature (10 total)
+                               7 income shares + ICS + diversity + shock
   state_effects.csv          - u_state for all states
   year_effects.csv           - gamma_t for 2011-2022
   waic.csv / loo.csv         - model information criteria
   trace.nc                   - full MCMC trace (NetCDF)
+
+  New features added:
+    income_stability_index   - ICS: Σ|share_t - share_t-1|  (ZIP volatility)
+    income_diversity_index   - Shannon entropy of income mix (diversification)
+    shock_response_index     - (income_2020-income_2019)/(income_2019+1) (COVID)
 
   trace_plot.png             - chain convergence (Sherri 2021)
   beta_forest.png            - beta coefficients with 94% HDI
