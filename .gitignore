@@ -36,5 +36,12 @@ dist/
 build/
 *.egg-info/
 
+# Node / Cloudflare app generated artifacts
+node_modules/
+cloudflare-app/frontend/node_modules/
+cloudflare-app/worker/node_modules/
+cloudflare-app/frontend/dist/
+cloudflare-app/worker/.wrangler/
+
 # PyTensor compiled cache
 pytensor_cache/

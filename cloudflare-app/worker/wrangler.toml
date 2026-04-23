@@ -1,0 +1,10 @@
+name = "income-model-api"
+main = "src/index.ts"
+compatibility_date = "2024-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = ""
+
+# For local dev the frontend proxies /api/* to this worker (port 8787).
+# Deploy to Workers and set VITE_API_URL in Cloudflare Pages dashboard.

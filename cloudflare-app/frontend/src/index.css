@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-navy-950 text-slate-200 font-sans antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(30, 58, 95, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(14, 37, 72, 0.2) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-navy-600 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-navy-500;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-navy-800 border border-navy-600/40 rounded-xl shadow-card;
+  }
+
+  .card-sm {
+    @apply bg-navy-800 border border-navy-600/40 rounded-lg shadow-card;
+  }
+
+  .label {
+    @apply text-xs font-semibold tracking-widest uppercase text-slate-400;
+  }
+
+  .value-lg {
+    @apply text-3xl font-bold font-mono tabular-nums;
+  }
+
+  .value-md {
+    @apply text-xl font-semibold font-mono tabular-nums;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold;
+  }
+
+  .badge-green {
+    @apply badge bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30;
+  }
+
+  .badge-red {
+    @apply badge bg-red-500/15 text-red-400 ring-1 ring-red-500/30;
+  }
+
+  .badge-blue {
+    @apply badge bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30;
+  }
+
+  .badge-gold {
+    @apply badge bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/30;
+  }
+
+  .badge-gray {
+    @apply badge bg-slate-500/15 text-slate-400 ring-1 ring-slate-500/30;
+  }
+
+  .table-row-hover {
+    @apply hover:bg-navy-700/50 transition-colors duration-100 cursor-default;
+  }
+
+  .input-field {
+    @apply w-full bg-navy-900 border border-navy-600/60 rounded-lg px-4 py-2.5
+           text-slate-200 placeholder-slate-500 font-mono
+           focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50
+           transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-lg font-semibold text-sm
+           bg-blue-600 hover:bg-blue-500 text-white
+           transition-all duration-200 active:scale-95
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-lg font-semibold text-sm
+           bg-navy-700 hover:bg-navy-600 text-slate-200 border border-navy-600/60
+           transition-all duration-200 active:scale-95;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-slate-100 tracking-tight;
+  }
+
+  .divider {
+    @apply border-t border-navy-600/40;
+  }
+
+  .tooltip-base {
+    @apply absolute z-50 px-3 py-1.5 rounded-lg text-xs font-medium
+           bg-navy-700 border border-navy-500/50 shadow-xl text-slate-200
+           pointer-events-none;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+           text-slate-400 hover:text-slate-200 hover:bg-navy-700/60
+           transition-all duration-150 cursor-pointer select-none;
+  }
+
+  .nav-item-active {
+    @apply nav-item text-slate-100 bg-blue-600/20 border border-blue-600/30
+           hover:bg-blue-600/25 hover:text-slate-100;
+  }
+
+  .stat-delta-positive {
+    @apply text-emerald-400 text-xs font-semibold;
+  }
+
+  .stat-delta-negative {
+    @apply text-red-400 text-xs font-semibold;
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 24px rgba(37, 99, 235, 0.2), 0 0 8px rgba(37, 99, 235, 0.1);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Recharts overrides */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(30, 45, 74, 0.8) !important;
+}
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
