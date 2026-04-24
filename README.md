@@ -124,6 +124,47 @@ All outputs are saved to `results/`.
 
 ---
 
+## Predict Specific ZIP (2023+)
+
+After running the next-year model script once, you can reuse saved artifacts and predict for a specific ZIP without retraining.
+
+### 1. Generate inference artifacts
+
+```bash
+python hierarchical_bayesian_panel_next_year.py
+```
+
+This creates:
+- `results/trace.nc`
+- `results/model_metadata.npz`
+- `results/latest_zip_features.csv`
+- `results/training_sampled_zips.csv`
+
+### 2. Predict one ZIP from CLI
+
+```bash
+python zip_income_predictor.py --zip 10001 --year 2023
+```
+
+You can also run it without `--zip` and it will prompt for input.
+
+To enforce that the ZIP must be inside the 3,000 ZIP training subsample:
+
+```bash
+python zip_income_predictor.py --zip 10001 --year 2023 --strict-training-zip
+```
+
+### 3. Run Streamlit app (ZIP input UI)
+
+```bash
+streamlit run streamlit_app.py
+```
+
+In the app, enter ZIP and forecast year (for example 2023), then click **Predict**.
+Use the **Strict training ZIP scope** toggle in the sidebar to allow only training-subsample ZIPs.
+
+---
+
 ## Load Pre-computed Results (skip re-running MCMC)
 
 If `results/trace.nc` is present, load the full posterior directly:
